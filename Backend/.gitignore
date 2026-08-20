@@ -1,0 +1,119 @@
+# ==========================================
+# 1. Environment Secrets & Credentials (CRITICAL)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.cert
+secret.json
+credentials.json
+
+# ==========================================
+# 2. Node.js / Express / NestJS
+# ==========================================
+node_modules/
+/jspm_packages/
+.npm
+.eslintcache
+.stylelintcache
+dist/
+build/
+.node_repl_history
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# 3. Python (Django, FastAPI, Flask)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.celerybeat-schedule
+.pytest_cache/
+.htmlcov/
+htmlcov/
+
+# ==========================================
+# 4. Java / Spring Boot
+# ==========================================
+*.class
+*.log
+*.jar
+*.war
+*.nar
+*.ear
+*.swp
+target/
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# ==========================================
+# 5. Go (Golang)
+# ==========================================
+# Binaries and templates
+bin/
+pkg/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# ==========================================
+# 6. PHP (Laravel / Symfony)
+# ==========================================
+/vendor/
+bootstrap/cache/
+storage/framework/
+storage/logs/
+/public/storage
+/public/hot
+
+# ==========================================
+# 7. Operating System & IDE Files
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Ehthumbs.db
+Desktop.ini
+
+# IDEs (VS Code, WebStorm, IntelliJ)
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ==========================================
+# 8. Logs and Databases
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+*.sqlite
+*.db
