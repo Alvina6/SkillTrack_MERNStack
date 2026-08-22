@@ -1,5 +1,6 @@
 const express= require("express");
 const authRouter= require("./routes/auth.routes")
+const applicationRouter = require("./routes/application.routes")
 const cookieParser= require("cookie-parser")
 const cors = require("cors")
 
@@ -12,6 +13,7 @@ app.use(cors({
   credentials:true
 }))
 app.use('/auth', authRouter)
+app.use("/dashboard", applicationRouter)
 
 
 module.exports= app;
