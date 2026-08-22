@@ -1,8 +1,8 @@
 import React from "react";
+
 import {
   Bell,
   BriefcaseBusiness,
-  CheckCircle2,
   Clock3,
   Target,
   Plus,
@@ -17,40 +17,34 @@ import "../styles/Dashboard.styles.scss";
 
 const stats = [
   {
-    label: "Total Applications",
+    label: "Applications",
     value: "18",
     description: "+4 this month",
-    type: "purple",
     icon: BriefcaseBusiness,
-    positive: true,
   },
   {
-    label: "Active Applications",
+    label: "Active",
     value: "6",
     description: "Currently in progress",
-    type: "blue",
     icon: Clock3,
   },
   {
     label: "Skills",
     value: "14",
-    description: "+3 added recently",
-    type: "green",
+    description: "+3 recently",
     icon: Code2,
-    positive: true,
   },
   {
-    label: "Career Goals",
+    label: "Goals",
     value: "5",
     description: "2 completed",
-    type: "orange",
     icon: Target,
   },
 ];
 
 const applicationProgress = [
   {
-    label: "Applications Submitted",
+    label: "Applications submitted",
     value: 18,
     percentage: 90,
   },
@@ -72,30 +66,24 @@ const recentApplications = [
     position: "Frontend Developer",
     location: "Karachi",
     status: "Interview",
-    statusClass: "status-interview",
+    statusClass: "interview",
     date: "2 days ago",
-    icon: "T",
-    iconClass: "purple",
   },
   {
     company: "Systems Ltd",
     position: "Software Engineer",
     location: "Karachi",
     status: "Applied",
-    statusClass: "status-applied",
+    statusClass: "applied",
     date: "4 days ago",
-    icon: "S",
-    iconClass: "blue",
   },
   {
     company: "Digital Labs",
     position: "MERN Stack Developer",
     location: "Remote",
     status: "In Review",
-    statusClass: "status-review",
+    statusClass: "review",
     date: "1 week ago",
-    icon: "D",
-    iconClass: "green",
   },
 ];
 
@@ -108,19 +96,26 @@ const Dashboard = () => {
         {/* ================= HEADER ================= */}
 
         <header className="dashboard-header">
-          <div className="dashboard-heading">
-            <h1>Dashboard</h1>
-            <p>Keep track of your applications, skills, and career goals.</p>
+          <div>
+            <span className="eyebrow">Career overview</span>
+
+            <h1>
+              Good morning, <em>Alvina.</em>
+            </h1>
+
+            <p>
+              A clear view of your applications, skills, and next career moves.
+            </p>
           </div>
 
           <div className="header-actions">
             <button
-              className="notification-btn"
               type="button"
+              className="notification-btn"
               aria-label="Notifications"
             >
-              <Bell size={18} />
-              <span className="notification-dot" />
+              <Bell size={18} strokeWidth={1.7} />
+              <span />
             </button>
 
             <div className="profile">
@@ -134,28 +129,24 @@ const Dashboard = () => {
           </div>
         </header>
 
-        {/* ================= STAT CARDS ================= */}
+        {/* ================= STATS ================= */}
 
         <section className="stats-grid">
           {stats.map((stat) => {
             const Icon = stat.icon;
 
             return (
-              <div className="stat-card" key={stat.label}>
-                <div className={`stat-icon ${stat.type}`}>
-                  <Icon size={20} />
+              <article className="stat-card" key={stat.label}>
+                <div className="stat-top">
+                  <span>{stat.label}</span>
+
+                  <Icon size={17} strokeWidth={1.6} />
                 </div>
 
-                <div className="stat-content">
-                  <p>{stat.label}</p>
+                <div className="stat-value">{stat.value}</div>
 
-                  <h2>{stat.value}</h2>
-
-                  <span className={stat.positive ? "positive" : ""}>
-                    {stat.description}
-                  </span>
-                </div>
-              </div>
+                <p>{stat.description}</p>
+              </article>
             );
           })}
         </section>
@@ -163,105 +154,106 @@ const Dashboard = () => {
         {/* ================= MAIN GRID ================= */}
 
         <section className="content-grid">
-          {/* APPLICATION OVERVIEW */}
+          {/* Application overview */}
 
-          <div className="card progress-card">
+          <article className="card progress-card">
             <div className="card-header">
               <div>
-                <h3>Application Overview</h3>
-                <p>Track your job application progress.</p>
+                <span className="card-eyebrow">Applications</span>
+
+                <h2>Application pipeline</h2>
+
+                <p>Your current movement from application to offer.</p>
               </div>
 
-              <button type="button">
-                View Applications
+              <button type="button" className="text-button">
+                View all
                 <ArrowUpRight size={14} />
               </button>
             </div>
 
-            <div className="progress-content">
-              {/* Progress Circle */}
+            <div className="pipeline">
+              <div className="pipeline-score">
+                <span>Overall progress</span>
 
-              <div className="progress-circle">
-                <div>
-                  <strong>72%</strong>
-                  <span>Progress</span>
-                </div>
+                <strong>
+                  72<span>%</span>
+                </strong>
+
+                <small>Across active applications</small>
               </div>
-
-              {/* Progress Details */}
 
               <div className="progress-details">
                 {applicationProgress.map((item) => (
                   <div className="progress-item" key={item.label}>
                     <div className="progress-label">
                       <span>{item.label}</span>
-                      <strong>{item.value}</strong>
+                      <strong>{String(item.value).padStart(2, "0")}</strong>
                     </div>
 
                     <div className="progress-bar">
-                      <div
-                        style={{
-                          width: `${item.percentage}%`,
-                        }}
-                      />
+                      <div style={{ width: `${item.percentage}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </article>
 
-          {/* ================= QUICK ACTIONS ================= */}
+          {/* Quick actions */}
 
-          <div className="card quick-card">
+          <article className="card quick-card">
             <div className="card-header">
               <div>
-                <h3>Quick Actions</h3>
-                <p>Manage your career journey.</p>
+                <span className="card-eyebrow">Workspace</span>
+
+                <h2>Quick actions</h2>
+
+                <p>Keep your career tracker up to date.</p>
               </div>
             </div>
 
             <div className="quick-actions">
               <button type="button">
-                <span className="action-icon purple">
-                  <Plus size={18} />
+                <span className="action-icon">
+                  <Plus size={17} />
                 </span>
 
-                <div>
-                  <strong>Add Application</strong>
-                  <small>Track a new job application</small>
-                </div>
+                <span className="action-copy">
+                  <strong>Add application</strong>
+                  <small>Track a new opportunity</small>
+                </span>
 
-                <ChevronRight size={16} />
+                <ChevronRight size={15} />
               </button>
 
               <button type="button">
-                <span className="action-icon blue">
+                <span className="action-icon">
                   <Code2 size={17} />
                 </span>
 
-                <div>
-                  <strong>Manage Skills</strong>
-                  <small>Update your professional skills</small>
-                </div>
+                <span className="action-copy">
+                  <strong>Manage skills</strong>
+                  <small>Update your professional profile</small>
+                </span>
 
-                <ChevronRight size={16} />
+                <ChevronRight size={15} />
               </button>
 
               <button type="button">
-                <span className="action-icon green">
+                <span className="action-icon">
                   <Target size={17} />
                 </span>
 
-                <div>
-                  <strong>Create Goal</strong>
-                  <small>Set a new career objective</small>
-                </div>
+                <span className="action-copy">
+                  <strong>Create goal</strong>
+                  <small>Define your next milestone</small>
+                </span>
 
-                <ChevronRight size={16} />
+                <ChevronRight size={15} />
               </button>
             </div>
-          </div>
+          </article>
         </section>
 
         {/* ================= RECENT APPLICATIONS ================= */}
@@ -269,101 +261,110 @@ const Dashboard = () => {
         <section className="card activity-card">
           <div className="card-header">
             <div>
-              <h3>Recent Applications</h3>
-              <p>Your latest job application activity.</p>
+              <span className="card-eyebrow">Activity</span>
+
+              <h2>Recent applications</h2>
+
+              <p>Your latest career activity.</p>
             </div>
 
-            <button type="button">
-              View All
+            <button type="button" className="text-button">
+              View all
               <ArrowUpRight size={14} />
             </button>
           </div>
 
-          <div className="activity-list">
+          <div className="application-table">
+            <div className="table-header">
+              <span>Role</span>
+              <span>Company</span>
+              <span>Location</span>
+              <span>Status</span>
+              <span>Updated</span>
+            </div>
+
             {recentApplications.map((application) => (
               <div
-                className="activity-item"
+                className="application-row"
                 key={`${application.company}-${application.position}`}
               >
-                <div className={`activity-icon ${application.iconClass}`}>
-                  {application.icon}
-                </div>
+                <strong>{application.position}</strong>
 
-                <div className="activity-info">
-                  <strong>{application.position}</strong>
+                <span>{application.company}</span>
 
-                  <p>
-                    {application.company}
-                    <span className="separator">·</span>
-                    {application.location}
-                  </p>
-                </div>
+                <span>{application.location}</span>
 
                 <span className={`status ${application.statusClass}`}>
                   {application.status}
                 </span>
 
-                <span className="activity-time">{application.date}</span>
+                <time>{application.date}</time>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ================= CAREER FOCUS ================= */}
+        {/* ================= CAREER GRID ================= */}
 
         <section className="bottom-grid">
-          <div className="card focus-card">
+          <article className="card focus-card">
             <div className="card-header">
               <div>
-                <h3>Career Focus</h3>
-                <p>Your current professional direction.</p>
+                <span className="card-eyebrow">Direction</span>
+
+                <h2>Career focus</h2>
               </div>
             </div>
 
             <div className="focus-content">
               <div className="focus-icon">
-                <Code2 size={20} />
+                <Code2 size={20} strokeWidth={1.6} />
               </div>
 
               <div>
                 <strong>MERN Stack Development</strong>
+
                 <p>
-                  Focus on improving your full-stack development skills and
-                  building relevant experience.
+                  Strengthen your full-stack fundamentals through practical
+                  projects and relevant industry experience.
                 </p>
+
+                <button type="button" className="inline-link">
+                  View skills
+                  <ArrowUpRight size={13} />
+                </button>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div className="card goal-card">
+          <article className="card goal-card">
             <div className="card-header">
               <div>
-                <h3>Current Goal</h3>
-                <p>Your next career milestone.</p>
+                <span className="card-eyebrow">Next milestone</span>
+
+                <h2>Current goal</h2>
               </div>
             </div>
 
             <div className="goal-content">
               <div className="goal-icon">
-                <GraduationCap size={20} />
+                <GraduationCap size={20} strokeWidth={1.6} />
               </div>
 
               <div className="goal-info">
                 <strong>Secure a Software Internship</strong>
 
-                <div className="goal-progress">
-                  <div>
-                    <span>Progress</span>
-                    <strong>65%</strong>
-                  </div>
+                <div className="goal-meta">
+                  <span>Progress</span>
+                  <strong>65%</strong>
+                </div>
 
-                  <div className="goal-bar">
-                    <div style={{ width: "65%" }} />
-                  </div>
+                <div className="goal-bar">
+                  <div style={{ width: "65%" }} />
                 </div>
               </div>
             </div>
-          </div>
+          </article>
         </section>
       </main>
     </div>
