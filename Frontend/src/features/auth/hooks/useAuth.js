@@ -10,10 +10,13 @@ export const useAuth=()=>{
   setLoading(true);
   try{
     const response = await login_Api({email, password})
-    setUser(response)
-    setLoading(false)
+    setUser(response.user)
+    return response
   }catch(err){
     console.log(err)
+    throw err
+  }finally{
+    setLoading(false)
   }
  
  }
@@ -22,32 +25,42 @@ export const useAuth=()=>{
   setLoading(true)
   try{
     const response= await register_api({email, username, password})
-    setUser(response)
-    setLoading(false)
+    setUser(response.user)
+    return response
   }catch(err){
     console.log(err)
+    throw err
+  }finally{
+    setLoading(false)
   }
  }
 
    const handle_logout = async()=>{
   setLoading(true)
   try{
-    const response= await logout_api()
+    await logout_api()
     setUser(null)
-    setLoading(false)
   }catch(err){
     console.log(err)
+    throw err
+  }finally{
+    setLoading(false)
   }
  }
 
 
   useEffect(()=>{
-    const getAndSetUser= async()=>{
-      const data = get_me_api()
-      setUser(data.user)
-      setLoading(false)
-    }
+   const getAndSetUser = async () => {
+  try {
+    const data = await get_me_api();   // 👈 await add karo
+    setUser(data.user);
+  } catch {
+    setUser(null);   // agar 401 aaye, user ko null set karo (logged out state)
+  } finally {
+    setLoading(false);
+  }
 
+   }
     getAndSetUser()
   }
   ,[])

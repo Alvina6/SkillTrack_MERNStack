@@ -11,6 +11,7 @@ export async function login_Api({email,password}){
       return response.data;
     }catch(err){
       console.log(err)
+       throw err 
     }
 }
 
@@ -21,6 +22,7 @@ export async function register_api({username,email, password}){
       return response.data
   }catch(err){
     console.log(err)
+     throw err 
   }
 }
 
@@ -30,6 +32,7 @@ export async function logout_api(){
       return response.data
   }catch(err){
     console.log(err)
+     throw err 
   }
 }
 
@@ -39,5 +42,6 @@ export async function get_me_api(){
       return response.data
   }catch(err){
     console.log(err)
+     throw err 
   }
 }

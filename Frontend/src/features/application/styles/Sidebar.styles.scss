@@ -1,10 +1,14 @@
 .sidebar {
   width: 248px;
-  min-height: 100vh;
+  min-width: 248px;
+  height: 100dvh;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  position: sticky;
+  top: 0;
 
   padding: 28px 18px;
 
@@ -14,6 +18,8 @@
   border-right: 1px solid #27272a;
 
   box-sizing: border-box;
+
+  flex-shrink: 0;
 }
 
 /* =========================

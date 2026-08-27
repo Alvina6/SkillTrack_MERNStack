@@ -3,9 +3,11 @@ import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 import { useAuth } from "../hooks/useAuth";
 import "../auth.style.scss";
+import { useNavigate } from "react-router-dom";
 
 const Register = ({ onSwitch }) => {
   const { handle_register, loading } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     fullName: "",
@@ -36,6 +38,7 @@ const Register = ({ onSwitch }) => {
         email: form.email,
         password: form.password,
       });
+      navigate("/dashboard");
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -81,7 +84,7 @@ const Register = ({ onSwitch }) => {
           </div>
 
           <div className="auth-tabs">
-            <button type="button" className="auth-tab" onClick={onSwitch}>
+            <button type="button" className="auth-tab" onClick={() => navigate("/login")}>
               Sign in
             </button>
 
@@ -181,7 +184,7 @@ const Register = ({ onSwitch }) => {
 
           <p className="auth-switch">
             Already have an account?
-            <button type="button" onClick={onSwitch}>
+            <button type="button" onClick={() => navigate("/login")}>
               Sign in
             </button>
           </p>

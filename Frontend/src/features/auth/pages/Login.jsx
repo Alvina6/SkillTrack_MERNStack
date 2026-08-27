@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import "../auth.style.scss";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ onSwitch }) => {
   const { handle_login, loading } = useAuth();
+  const navigate= useNavigate();
 
   const [form, setForm] = useState({
     email: "",
@@ -33,6 +35,7 @@ const Login = ({ onSwitch }) => {
         email: form.email,
         password: form.password,
       });
+      navigate("/dashboard");
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -82,7 +85,7 @@ const Login = ({ onSwitch }) => {
               Sign in
             </button>
 
-            <button type="button" className="auth-tab" onClick={onSwitch}>
+            <button type="button" className="auth-tab" onClick={() => navigate("/register")}>
               Create account
             </button>
           </div>
@@ -152,7 +155,7 @@ const Login = ({ onSwitch }) => {
 
           <p className="auth-switch">
             Don't have an account?
-            <button type="button" onClick={onSwitch}>
+            <button type="button" onClick={() => navigate("/register")}>
               Create one
             </button>
           </p>
