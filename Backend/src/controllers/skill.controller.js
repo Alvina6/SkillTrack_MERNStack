@@ -46,7 +46,7 @@ async function updateSkill(req,res){
      const{name, level}= req.body;
   const updateSkill= await skillModel.findOneAndUpdate({_id:req.params.id, user:req.user._id},{name, level},{new:true})
    if(!updateSkill){
-      return res.status(404).json({ message: "Application not found" });
+      return res.status(404).json({ message: "skill not found" });
     }
      return res.status(200).json({message:"Skills updated succesfully",updateSkill})
  }catch(err){

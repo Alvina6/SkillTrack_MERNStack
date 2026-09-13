@@ -6,6 +6,8 @@ import Protected from "./features/auth/components/Protected";
 import Applications from "./features/application/pages/Applications";
 import Dashboard from "./features/application/pages/Dashboard";
 import Skills from "./features/application/pages/Skills";
+import Goals from "./features/application/pages/Goals";
+import { Goal } from "lucide-react";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +27,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/get-application",
+    path: "/dashboard/Application",
     element: (
       <Protected>
         <Applications />,
@@ -33,10 +35,18 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/get-skills",
+    path: "/dashboard/Skills",
     element: (
       <Protected>
         <Skills />,
+      </Protected>
+    ),
+  },
+  {
+    path: "/dashboard/Goals",
+    element: (
+      <Protected>
+        <Goals />,
       </Protected>
     ),
   },
