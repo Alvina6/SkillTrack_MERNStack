@@ -1,11 +1,20 @@
-import React, { useState } from "react";
-import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import {
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  Check,
+  X,
+} from "lucide-react";
 
 import { useAuth } from "../hooks/useAuth";
 import "../auth.style.scss";
 import { useNavigate } from "react-router-dom";
 
-const Register = ({ onSwitch }) => {
+const Register = () => {
   const { handle_register, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -18,6 +27,28 @@ const Register = ({ onSwitch }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
+  const passwordChecks = [
+    { label: "At least 8 characters", passed: form.password.length >= 8 },
+    {
+      label: "No more than 72 characters",
+      passed: form.password.length > 0 && form.password.length <= 72,
+    },
+    { label: "One lowercase letter", passed: /[a-z]/.test(form.password) },
+    { label: "One uppercase letter", passed: /[A-Z]/.test(form.password) },
+    { label: "One number", passed: /\d/.test(form.password) },
+    {
+      label: "One special character (@ $ ! % * ? &)",
+      passed: /[@$!%*?&]/.test(form.password),
+    },
+    {
+      label: "Only letters, numbers, and @ $ ! % * ? &",
+      passed:
+        form.password.length > 0 &&
+        /^[A-Za-z\d@$!%*?&]+$(?![\s\S])/.test(form.password),
+    },
+  ];
+  const passwordValid = passwordChecks.every((check) => check.passed);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -29,6 +60,12 @@ const Register = ({ onSwitch }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!passwordValid) {
+      setError(
+        "Please meet all password requirements before creating your account.",
+      );
+      return;
+    }
 
     try {
       setError("");
@@ -40,9 +77,14 @@ const Register = ({ onSwitch }) => {
       });
       navigate("/dashboard");
     } catch (err) {
-      setError(
+      const message =
         err?.response?.data?.message ||
-          "We couldn't create your account. Please try again.",
+        "We couldn't create your account. Please try again.";
+      const requirements = err?.response?.data?.requirements;
+      setError(
+        requirements?.length
+          ? `${message} ${requirements.join("; ")}.`
+          : message,
       );
     }
   };
@@ -84,7 +126,11 @@ const Register = ({ onSwitch }) => {
           </div>
 
           <div className="auth-tabs">
-            <button type="button" className="auth-tab" onClick={() => navigate("/login")}>
+            <button
+              type="button"
+              className="auth-tab"
+              onClick={() => navigate("/login")}
+            >
               Sign in
             </button>
 
@@ -108,6 +154,7 @@ const Register = ({ onSwitch }) => {
                   onChange={handleChange}
                   placeholder="Your name"
                   autoComplete="name"
+                  maxLength={100}
                   required
                 />
               </div>
@@ -146,6 +193,7 @@ const Register = ({ onSwitch }) => {
                   onChange={handleChange}
                   placeholder="Create a password"
                   autoComplete="new-password"
+                  maxLength={72}
                   required
                 />
 
@@ -159,9 +207,27 @@ const Register = ({ onSwitch }) => {
                 </button>
               </div>
 
-              <span className="auth-field__hint">
-                Use at least 8 characters with a mix of letters and numbers.
-              </span>
+              <ul
+                className="password-checklist"
+                aria-label="Password requirements"
+                aria-live="polite"
+              >
+                {passwordChecks.map(({ label, passed }) => (
+                  <li
+                    className={
+                      passed
+                        ? "password-checklist__item password-checklist__item--passed"
+                        : "password-checklist__item"
+                    }
+                    key={label}
+                  >
+                    <span aria-hidden="true">
+                      {passed ? <Check size={12} /> : <X size={12} />}
+                    </span>
+                    {label}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {error && <p className="auth-error">{error}</p>}
@@ -175,7 +241,11 @@ const Register = ({ onSwitch }) => {
               </span>
             </label>
 
-            <button type="submit" className="auth-submit" disabled={loading}>
+            <button
+              type="submit"
+              className="auth-submit"
+              disabled={loading || !passwordValid}
+            >
               {loading ? "Creating account..." : "Create account"}
 
               {!loading && <ArrowRight size={16} />}

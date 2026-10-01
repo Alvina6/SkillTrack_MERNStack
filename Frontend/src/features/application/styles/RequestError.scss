@@ -1,0 +1,24 @@
+.request-error {
+  position: sticky;
+  z-index: 1200;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  padding: 12px 14px;
+  border: 1px solid #e6b9b5;
+  background: #fff5f3;
+  color: #8c342c;
+  box-shadow: 0 5px 16px #20282012;
+}
+
+.request-error > svg { flex: 0 0 auto; }
+.request-error p { flex: 1; margin: 0; font-size: 12px; line-height: 1.5; }
+.request-error button { display: grid; place-items: center; width: 28px; height: 28px; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.request-error button:hover { background: #f6e5e2; }
+
+@media (max-width: 600px) {
+  .request-error { align-items: flex-start; padding: 10px; }
+  .request-error p { font-size: 11px; }
+}

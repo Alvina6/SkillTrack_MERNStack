@@ -12,9 +12,6 @@ export const useAuth=()=>{
     const response = await login_Api({email, password})
     setUser(response.user)
     return response
-  }catch(err){
-    console.log(err)
-    throw err
   }finally{
     setLoading(false)
   }
@@ -27,9 +24,6 @@ export const useAuth=()=>{
     const response= await register_api({email, username, password})
     setUser(response.user)
     return response
-  }catch(err){
-    console.log(err)
-    throw err
   }finally{
     setLoading(false)
   }
@@ -40,9 +34,6 @@ export const useAuth=()=>{
   try{
     await logout_api()
     setUser(null)
-  }catch(err){
-    console.log(err)
-    throw err
   }finally{
     setLoading(false)
   }
@@ -63,7 +54,7 @@ export const useAuth=()=>{
    }
     getAndSetUser()
   }
-  ,[])
+  ,[setLoading, setUser])
 
  return {user,loading, handle_login,handle_logout,handle_register}
 }

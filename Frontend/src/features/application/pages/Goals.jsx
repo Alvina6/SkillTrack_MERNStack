@@ -13,18 +13,14 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/Sidebar";
+import RequestError from "../components/RequestError";
 import { useGoal } from "../hooks/useGoal";
 
 import "../styles/Goals.styles.scss";
 
 const Goals = () => {
-  const {
-    goals,
-    loading,
-    addGoal,
-    editGoal,
-    removeGoal,
-  } = useGoal();
+  const { goals, loading, error, clearError, addGoal, editGoal, removeGoal } =
+    useGoal();
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -52,8 +48,7 @@ const Goals = () => {
         goal.description?.toLowerCase().includes(searchText);
 
       const matchesStatus =
-        statusFilter === "All" ||
-        goal.status === statusFilter;
+        statusFilter === "All" || goal.status === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
@@ -66,15 +61,15 @@ const Goals = () => {
   const totalGoals = goals.length;
 
   const notStartedGoals = goals.filter(
-    (goal) => goal.status === "Not Started"
+    (goal) => goal.status === "Not Started",
   ).length;
 
   const inProgressGoals = goals.filter(
-    (goal) => goal.status === "In Progress"
+    (goal) => goal.status === "In Progress",
   ).length;
 
   const completedGoals = goals.filter(
-    (goal) => goal.status === "Completed"
+    (goal) => goal.status === "Completed",
   ).length;
 
   /* =========================
@@ -105,9 +100,7 @@ const Goals = () => {
       title: goal.title || "",
       description: goal.description || "",
       status: goal.status || "Not Started",
-      deadline: goal.deadline
-        ? goal.deadline.substring(0, 10)
-        : "",
+      deadline: goal.deadline ? goal.deadline.substring(0, 10) : "",
     });
 
     setShowForm(true);
@@ -153,13 +146,14 @@ const Goals = () => {
       return;
     }
 
+    let saved;
     if (editingGoal) {
-      await editGoal(editingGoal._id, formData);
+      saved = await editGoal(editingGoal._id, formData);
     } else {
-      await addGoal(formData);
+      saved = await addGoal(formData);
     }
 
-    closeForm();
+    if (saved) closeForm();
   };
 
   /* =========================
@@ -168,7 +162,7 @@ const Goals = () => {
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this goal?"
+      "Are you sure you want to delete this goal?",
     );
 
     if (!confirmed) return;
@@ -185,14 +179,11 @@ const Goals = () => {
       return "No deadline";
     }
 
-    return new Date(deadline).toLocaleDateString(
-      "en-US",
-      {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }
-    );
+    return new Date(deadline).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
   /* =========================
@@ -213,7 +204,6 @@ const Goals = () => {
 
   return (
     <div className="goals-page">
-
       {/* =========================
           SIDEBAR
       ========================= */}
@@ -225,51 +215,37 @@ const Goals = () => {
       ========================= */}
 
       <main className="goals-main">
-
         {/* =========================
             HEADER
         ========================= */}
 
         <header className="goals-header">
-
           <div className="goals-heading">
-
-            <span className="eyebrow">
-              Professional direction
-            </span>
+            <span className="eyebrow">Professional direction</span>
 
             <h1>
               Your <em>goals.</em>
             </h1>
 
             <p>
-              Define the milestones that move your career
-              forward and keep track of the work behind them.
+              Define the milestones that move your career forward and keep track
+              of the work behind them.
             </p>
-
           </div>
 
-          <button
-            type="button"
-            className="add-goal-btn"
-            onClick={openAddForm}
-          >
-            <Plus
-              size={16}
-              strokeWidth={1.7}
-            />
-
+          <button type="button" className="add-goal-btn" onClick={openAddForm}>
+            <Plus size={16} strokeWidth={1.7} />
             Add goal
           </button>
-
         </header>
+
+        <RequestError message={error} onDismiss={clearError} />
 
         {/* =========================
             STATS
         ========================= */}
 
         <section className="goals-stats">
-
           <article className="goal-stat">
             <span>Total goals</span>
             <strong>{totalGoals}</strong>
@@ -289,7 +265,6 @@ const Goals = () => {
             <span>Completed</span>
             <strong>{completedGoals}</strong>
           </article>
-
         </section>
 
         {/* =========================
@@ -297,53 +272,31 @@ const Goals = () => {
         ========================= */}
 
         <section className="goals-toolbar">
-
           <div className="goals-search">
-
-            <Search
-              size={16}
-              strokeWidth={1.5}
-            />
+            <Search size={16} strokeWidth={1.5} />
 
             <input
               type="text"
               placeholder="Search goals..."
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
             />
-
           </div>
 
           <div className="goal-filters">
-
-            {[
-              "All",
-              "Not Started",
-              "In Progress",
-              "Completed",
-            ].map((status) => (
-
-              <button
-                key={status}
-                type="button"
-                className={
-                  statusFilter === status
-                    ? "filter-active"
-                    : ""
-                }
-                onClick={() =>
-                  setStatusFilter(status)
-                }
-              >
-                {status}
-              </button>
-
-            ))}
-
+            {["All", "Not Started", "In Progress", "Completed"].map(
+              (status) => (
+                <button
+                  key={status}
+                  type="button"
+                  className={statusFilter === status ? "filter-active" : ""}
+                  onClick={() => setStatusFilter(status)}
+                >
+                  {status}
+                </button>
+              ),
+            )}
           </div>
-
         </section>
 
         {/* =========================
@@ -351,31 +304,19 @@ const Goals = () => {
         ========================= */}
 
         <section className="goals-card">
-
           <div className="card-heading">
-
             <div>
-
-              <span className="card-eyebrow">
-                Milestone tracker
-              </span>
+              <span className="card-eyebrow">Milestone tracker</span>
 
               <h2>All goals</h2>
 
-              <p>
-                Your current career and development
-                milestones.
-              </p>
-
+              <p>Your current career and development milestones.</p>
             </div>
 
             <span className="goal-results">
               {filteredGoals.length}{" "}
-              {filteredGoals.length === 1
-                ? "goal"
-                : "goals"}
+              {filteredGoals.length === 1 ? "goal" : "goals"}
             </span>
-
           </div>
 
           {/* =========================
@@ -383,26 +324,15 @@ const Goals = () => {
           ========================= */}
 
           {loading ? (
-
-            <div className="goals-loading">
-              Loading your goals...
-            </div>
-
+            <div className="goals-loading">Loading your goals...</div>
           ) : filteredGoals.length === 0 ? (
-
             /* =========================
                EMPTY STATE
             ========================= */
 
             <div className="goals-empty">
-
               <div className="empty-icon">
-
-                <Target
-                  size={20}
-                  strokeWidth={1.5}
-                />
-
+                <Target size={20} strokeWidth={1.5} />
               </div>
 
               <h3>
@@ -417,73 +347,42 @@ const Goals = () => {
                   : "Create your first milestone and start tracking your progress."}
               </p>
 
-              {!search &&
-                statusFilter === "All" && (
-
-                  <button
-                    type="button"
-                    className="empty-action"
-                    onClick={openAddForm}
-                  >
-                    <Plus size={15} />
-
-                    Create your first goal
-                  </button>
-
-                )}
-
+              {!search && statusFilter === "All" && (
+                <button
+                  type="button"
+                  className="empty-action"
+                  onClick={openAddForm}
+                >
+                  <Plus size={15} />
+                  Create your first goal
+                </button>
+              )}
             </div>
-
           ) : (
-
             /* =========================
                GOAL LIST
             ========================= */
 
             <div className="goals-list">
-
               {filteredGoals.map((goal) => {
-
                 const overdue = isOverdue(goal);
 
                 return (
-
-                  <article
-                    className="goal-item"
-                    key={goal._id}
-                  >
-
+                  <article className="goal-item" key={goal._id}>
                     {/* LEFT */}
 
                     <div className="goal-item-main">
-
                       <div className="goal-item-icon">
-
                         {goal.status === "Completed" ? (
-
-                          <CheckCircle2
-                            size={18}
-                            strokeWidth={1.5}
-                          />
-
+                          <CheckCircle2 size={18} strokeWidth={1.5} />
                         ) : (
-
-                          <Target
-                            size={18}
-                            strokeWidth={1.5}
-                          />
-
+                          <Target size={18} strokeWidth={1.5} />
                         )}
-
                       </div>
 
                       <div className="goal-item-content">
-
                         <div className="goal-title-row">
-
-                          <h3>
-                            {goal.title}
-                          </h3>
+                          <h3>{goal.title}</h3>
 
                           <span
                             className={`goal-status ${goal.status
@@ -492,107 +391,57 @@ const Goals = () => {
                           >
                             {goal.status}
                           </span>
-
                         </div>
 
-                        {goal.description && (
-
-                          <p>
-                            {goal.description}
-                          </p>
-
-                        )}
+                        {goal.description && <p>{goal.description}</p>}
 
                         <div className="goal-meta">
+                          <span className={overdue ? "deadline-overdue" : ""}>
+                            <CalendarDays size={13} strokeWidth={1.5} />
 
-                          <span
-                            className={
-                              overdue
-                                ? "deadline-overdue"
-                                : ""
-                            }
-                          >
+                            {overdue ? "Overdue · " : "Deadline · "}
 
-                            <CalendarDays
-                              size={13}
-                              strokeWidth={1.5}
-                            />
-
-                            {overdue
-                              ? "Overdue · "
-                              : "Deadline · "}
-
-                            {formatDeadline(
-                              goal.deadline
-                            )}
-
+                            {formatDeadline(goal.deadline)}
                           </span>
 
                           <span>
-
-                            <Clock3
-                              size={13}
-                              strokeWidth={1.5}
-                            />
+                            <Clock3 size={13} strokeWidth={1.5} />
 
                             {goal.status === "Completed"
                               ? "Milestone reached"
                               : goal.status === "In Progress"
-                              ? "Currently in progress"
-                              : "Not started yet"}
-
+                                ? "Currently in progress"
+                                : "Not started yet"}
                           </span>
-
                         </div>
-
                       </div>
-
                     </div>
 
                     {/* RIGHT */}
 
                     <div className="goal-item-actions">
-
                       <button
                         type="button"
-                        onClick={() =>
-                          openEditForm(goal)
-                        }
+                        onClick={() => openEditForm(goal)}
                         aria-label={`Edit ${goal.title}`}
                       >
-                        <Edit3
-                          size={15}
-                          strokeWidth={1.5}
-                        />
+                        <Edit3 size={15} strokeWidth={1.5} />
                       </button>
 
                       <button
                         type="button"
                         className="delete-goal"
-                        onClick={() =>
-                          handleDelete(
-                            goal._id
-                          )
-                        }
+                        onClick={() => handleDelete(goal._id)}
                         aria-label={`Delete ${goal.title}`}
                       >
-                        <Trash2
-                          size={15}
-                          strokeWidth={1.5}
-                        />
+                        <Trash2 size={15} strokeWidth={1.5} />
                       </button>
-
                     </div>
-
                   </article>
-
                 );
               })}
-
             </div>
-
           )}
-
         </section>
 
         {/* =========================
@@ -600,39 +449,24 @@ const Goals = () => {
         ========================= */}
 
         {goals.length > 0 && (
-
           <section className="goals-note">
-
             <div>
+              <span className="card-eyebrow">Career planning</span>
 
-              <span className="card-eyebrow">
-                Career planning
-              </span>
-
-              <h3>
-                Small milestones create visible progress.
-              </h3>
+              <h3>Small milestones create visible progress.</h3>
 
               <p>
-                Keep your goals specific and connected to
-                the roles, skills, and opportunities you
-                want next.
+                Keep your goals specific and connected to the roles, skills, and
+                opportunities you want next.
               </p>
-
             </div>
 
             <button type="button">
-
               Review skills
-
               <ArrowUpRight size={14} />
-
             </button>
-
           </section>
-
         )}
-
       </main>
 
       {/* =========================
@@ -640,43 +474,28 @@ const Goals = () => {
       ========================= */}
 
       {showForm && (
-
         <div
           className="goal-modal-overlay"
           onMouseDown={(e) => {
-
             if (e.target === e.currentTarget) {
               closeForm();
             }
-
           }}
         >
-
           <div className="goal-modal">
-
             {/* MODAL HEADER */}
 
             <div className="modal-header">
-
               <div>
-
                 <span className="card-eyebrow">
-                  {editingGoal
-                    ? "Update milestone"
-                    : "New milestone"}
+                  {editingGoal ? "Update milestone" : "New milestone"}
                 </span>
 
-                <h2>
-                  {editingGoal
-                    ? "Edit goal"
-                    : "Create a goal"}
-                </h2>
+                <h2>{editingGoal ? "Edit goal" : "Create a goal"}</h2>
 
                 <p>
-                  Define a clear milestone for your
-                  professional development.
+                  Define a clear milestone for your professional development.
                 </p>
-
               </div>
 
               <button
@@ -687,19 +506,15 @@ const Goals = () => {
               >
                 ×
               </button>
-
             </div>
 
             {/* FORM */}
 
             <form onSubmit={handleSubmit}>
-
               {/* TITLE */}
 
               <label>
-
                 Goal title
-
                 <input
                   type="text"
                   name="title"
@@ -708,15 +523,12 @@ const Goals = () => {
                   onChange={handleChange}
                   required
                 />
-
               </label>
 
               {/* DESCRIPTION */}
 
               <label>
-
                 Description
-
                 <textarea
                   name="description"
                   placeholder="Describe what you want to achieve..."
@@ -724,58 +536,40 @@ const Goals = () => {
                   onChange={handleChange}
                   rows="4"
                 />
-
               </label>
 
               {/* STATUS + DEADLINE */}
 
               <div className="form-row">
-
                 <label>
-
                   Status
-
                   <select
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
                   >
+                    <option value="Not Started">Not Started</option>
 
-                    <option value="Not Started">
-                      Not Started
-                    </option>
+                    <option value="In Progress">In Progress</option>
 
-                    <option value="In Progress">
-                      In Progress
-                    </option>
-
-                    <option value="Completed">
-                      Completed
-                    </option>
-
+                    <option value="Completed">Completed</option>
                   </select>
-
                 </label>
 
                 <label>
-
                   Deadline
-
                   <input
                     type="date"
                     name="deadline"
                     value={formData.deadline}
                     onChange={handleChange}
                   />
-
                 </label>
-
               </div>
 
               {/* ACTIONS */}
 
               <div className="modal-actions">
-
                 <button
                   type="button"
                   className="cancel-btn"
@@ -784,25 +578,14 @@ const Goals = () => {
                   Cancel
                 </button>
 
-                <button
-                  type="submit"
-                  className="save-btn"
-                >
-                  {editingGoal
-                    ? "Save changes"
-                    : "Create goal"}
+                <button type="submit" className="save-btn">
+                  {editingGoal ? "Save changes" : "Create goal"}
                 </button>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 };

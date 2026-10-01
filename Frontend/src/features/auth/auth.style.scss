@@ -733,3 +733,40 @@
     font-size: 36px;
   }
 }
+
+.password-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 12px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.password-checklist__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: #777e78;
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.password-checklist__item > span {
+  display: grid;
+  flex: 0 0 14px;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #c9cfca;
+  border-radius: 50%;
+  color: #8d938e;
+}
+
+.password-checklist__item--passed { color: var(--accent); }
+
+.password-checklist__item--passed > span {
+  border-color: #b8cbbd;
+  background: var(--accent-soft);
+  color: var(--accent);
+}

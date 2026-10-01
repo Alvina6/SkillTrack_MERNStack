@@ -1,15 +1,24 @@
 import { createBrowserRouter } from "react-router-dom";
+
 import Login from "./features/auth/pages/Login";
 import Register from "./features/auth/pages/Register";
-
 import Protected from "./features/auth/components/Protected";
+
 import Applications from "./features/application/pages/Applications";
 import Dashboard from "./features/application/pages/Dashboard";
 import Skills from "./features/application/pages/Skills";
 import Goals from "./features/application/pages/Goals";
-import { Goal } from "lucide-react";
+
+import Profile from "./features/Profile/pages/Profile";
+import Landing from "./features/landing/Landing";
 
 const router = createBrowserRouter([
+  // Public Routes
+
+  {
+    path: "/",
+    element: <Landing />,
+  },
   {
     path: "/login",
     element: <Login />,
@@ -18,11 +27,13 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
+
+  // Protected Routes
   {
     path: "/dashboard",
     element: (
       <Protected>
-        <Dashboard />,
+        <Dashboard />
       </Protected>
     ),
   },
@@ -30,7 +41,7 @@ const router = createBrowserRouter([
     path: "/dashboard/Application",
     element: (
       <Protected>
-        <Applications />,
+        <Applications />
       </Protected>
     ),
   },
@@ -38,7 +49,7 @@ const router = createBrowserRouter([
     path: "/dashboard/Skills",
     element: (
       <Protected>
-        <Skills />,
+        <Skills />
       </Protected>
     ),
   },
@@ -46,7 +57,15 @@ const router = createBrowserRouter([
     path: "/dashboard/Goals",
     element: (
       <Protected>
-        <Goals />,
+        <Goals />
+      </Protected>
+    ),
+  },
+  {
+    path: "/dashboard/Profile",
+    element: (
+      <Protected>
+        <Profile />
       </Protected>
     ),
   },

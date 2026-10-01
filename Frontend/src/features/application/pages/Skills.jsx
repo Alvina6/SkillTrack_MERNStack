@@ -3,12 +3,21 @@ import React, { useMemo, useState } from "react";
 import { ArrowUpRight, Code2, Edit3, Plus, Search, Trash2 } from "lucide-react";
 
 import Sidebar from "../components/Sidebar";
+import RequestError from "../components/RequestError";
 import { useSkills } from "../hooks/useSkills";
 
 import "../styles/Skills.styles.scss";
 
 const Skills = () => {
-  const { skills, loading, addSkill, editSkill, deleteSkill } = useSkills();
+  const {
+    skills,
+    loading,
+    error,
+    clearError,
+    addSkill,
+    editSkill,
+    deleteSkill,
+  } = useSkills();
 
   const [search, setSearch] = useState("");
 
@@ -86,13 +95,14 @@ const Skills = () => {
 
     if (!formData.name.trim()) return;
 
+    let saved;
     if (editingSkill) {
-      await editSkill(editingSkill._id, formData);
+      saved = await editSkill(editingSkill._id, formData);
     } else {
-      await addSkill(formData);
+      saved = await addSkill(formData);
     }
 
-    closeForm();
+    if (saved) closeForm();
   };
 
   const handleDelete = async (id) => {
@@ -131,6 +141,8 @@ const Skills = () => {
             Add skill
           </button>
         </header>
+
+        <RequestError message={error} onDismiss={clearError} />
 
         {/* STATS */}
 

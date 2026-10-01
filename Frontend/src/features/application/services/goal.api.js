@@ -2,48 +2,28 @@ import axios from 'axios'
 
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
   withCredentials:true  
 })
 
 
 
 export async function createGoalAPI({title, description,status, deadline }){
-   try{
-    const response= await api.post("/dashboard/createGoals",{title, description,status, deadline})
-    return response.data
-   }catch(err){
-    console.log(err)
-   }
-
+   const response = await api.post("/dashboard/createGoals", { title, description, status, deadline });
+   return response.data;
 }
 
 export async function updateGoalAPI({id ,title, description,status, deadline }){
-   try{
-    const response= await api.patch(`/dashboard/updateGoal/${id}`,{title, description,status, deadline})
-    return response.data
-   }catch(err){
-    console.log(err)
-   }
-
+   const response = await api.patch(`/dashboard/updateGoal/${id}`, { title, description, status, deadline });
+   return response.data;
 }
 
 export async function deleteGoalAPI(id){
-   try{
-    const response= await api.delete(`/dashboard/deleteGoal/${id}`)
-    return response.data
-   }catch(err){
-    console.log(err)
-   }
-
+   const response = await api.delete(`/dashboard/deleteGoal/${id}`);
+   return response.data;
 }
 
 export async function getGoalsAPI(){
-   try{
-    const response= await api.get("/dashboard/getGoals")
-    return response.data
-   }catch(err){
-    console.log(err)
-   }
-
+   const response = await api.get("/dashboard/getGoals");
+   return response.data;
 }

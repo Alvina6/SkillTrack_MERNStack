@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/Sidebar";
+import RequestError from "../components/RequestError";
 import { useApplication } from "../hooks/useApplication";
 
 import "../styles/Applications.styles.scss";
@@ -41,6 +42,8 @@ const Applications = () => {
   const {
     applications,
     loading,
+    error,
+    clearError,
     addApplication,
     editApplication,
     removeApplication,
@@ -89,13 +92,16 @@ const Applications = () => {
   };
 
   const handleSubmit = async (formData) => {
+    let saved;
+
     if (editingApplication) {
-      await editApplication(editingApplication._id, formData);
+      saved = await editApplication(editingApplication._id, formData);
     } else {
-      await addApplication(formData);
+      saved = await addApplication(formData);
     }
 
-    handleCloseForm();
+    if (saved) handleCloseForm();
+    return saved;
   };
 
   const handleOpenDelete = (application) => {
@@ -106,7 +112,8 @@ const Applications = () => {
   const handleDelete = async () => {
     if (!deleteTarget) return;
 
-    await removeApplication(deleteTarget._id);
+    const removed = await removeApplication(deleteTarget._id);
+    if (!removed) return;
 
     setDeleteTarget(null);
     setShowDelete(false);
@@ -148,6 +155,8 @@ const Applications = () => {
             Add application
           </button>
         </header>
+
+        <RequestError message={error} onDismiss={clearError} />
 
         {/* =====================================================
             SUMMARY
